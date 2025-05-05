@@ -12,37 +12,9 @@ module "afw" {
 
   application_rules = local.application_rules
   network_rules     = local.network_rules
-  nat_rules         = local.nat_rules
-}
+  # nat_rules         = local.nat_rules
 
-
-
-locals {
-  application_rules = [
-    {
-      name             = "allow-nginx"
-      source_addresses = ["*"]
-      protocols = [
-        {
-          port = 80
-          type = "Http"
-        }
-      ]
-      target_fqdns = [var.aks_loadbalancer_ip]
-    }
-  ]
-
-  network_rules = [
-    {
-      name                  = "allow-all-outbound"
-      source_addresses      = ["*"]
-      destination_addresses = ["*"]
-      destination_ports     = ["*"]
-      protocols             = ["TCP", "UDP"]
-    }
-  ]
-
-  nat_rules = [
+  nat_rules = [ # defined inline here
     {
       name                  = "nginx-dnat"
       source_addresses      = ["*"]
@@ -54,3 +26,4 @@ locals {
     }
   ]
 }
+
