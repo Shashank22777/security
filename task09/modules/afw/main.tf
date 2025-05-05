@@ -44,11 +44,17 @@ resource "azurerm_route_table" "afw_route_table" {
   }
 }
 
+
+data "azurerm_public_ip" "firewall_pip" {
+  name                = azurerm_public_ip.firewall_pip.name
+  resource_group_name = var.rg_name
+}
+
 resource "azurerm_route" "fwpip_to_internet" {
   name                   = var.fwpip
   resource_group_name    = var.rg_name
   route_table_name       = azurerm_route_table.afw_route_table.name
-  address_prefix         = "${azurerm_firewall.afw.ip_configuration[0].public_ip_address_id}/32"
+  address_prefix         = "${data.azurerm_public_ip.firewall_pip.ip_address}/32"  # Firewall Public IP
   next_hop_type          = "Internet"
 }
 
